@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>—</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ========== 1) PASSWORD GATE ========== -->
+    <div id="gate" class="screen screen--gate gate--waiting" aria-hidden="false">
+      <div class="gate__inner">
+        <p class="gate__lead gate-animate">
+          Buraya kadar geldiysen… geri dönüşü olmayan küçük bir kapı burası.
+        </p>
+        <form id="gate-form" class="gate__form gate-animate gate-animate--delay" novalidate>
+          <label for="gate-password" class="visually-hidden">Şifre</label>
+          <input
+            id="gate-password"
+            type="password"
+            name="password"
+            autocomplete="off"
+            placeholder="Şifre"
+            class="gate__input"
+          />
+          <button type="submit" class="gate__submit">Gir</button>
+        </form>
+        <p id="gate-error" class="gate__error" role="alert" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <div id="confetti-root" class="confetti-root" aria-hidden="true"></div>
+
+    <!-- ========== 3) CINEMATIC INTRO ========== -->
+    <div id="intro" class="screen screen--intro is-hidden" aria-hidden="true">
+      <div class="intro__inner">
+        <p id="intro-session" class="intro__session" aria-live="polite"></p>
+        <p id="intro-line" class="intro__line intro__line--fade"></p>
+        <button type="button" id="intro-start" class="intro__start is-hidden">
+          Devam et
+        </button>
+      </div>
+    </div>
+
+    <!-- ========== SCROLL STORY ========== -->
+    <main id="story" class="story is-hidden" aria-hidden="true">
+      <p id="birthday-banner" class="birthday-banner is-hidden" role="status"></p>
+
+      <div class="audio-bar audio-bar--story-enter">
+        <button
+          type="button"
+          id="ambient-toggle"
+          class="audio-bar__btn"
+          aria-pressed="false"
+          aria-label="Ortam sesini aç veya kapat"
+        >
+          <span class="audio-bar__icon" aria-hidden="true">◦</span>
+          <span class="audio-bar__label">ses</span>
+        </button>
+      </div>
+
+      <audio id="ambient-audio" preload="metadata" loop>
+        <source src="assets/ambient.mp3" type="audio/mpeg" />
+      </audio>
+
+      <p
+        id="scroll-idle-whisper"
+        class="scroll-idle-whisper is-hidden"
+        aria-live="polite"
+        aria-hidden="true"
+      ></p>
+
+      <aside class="timer-block reveal reveal--timer" id="timer-block">
+        <p class="timer-block__label" id="timer-label"></p>
+        <p class="timer-block__value" id="relationship-timer">—</p>
+        <div class="timer-block__today" aria-live="polite">
+          <p class="timer-block__label timer-block__label--today" id="today-timer-label"></p>
+          <p class="timer-block__value timer-block__value--today" id="today-timer">—</p>
+        </div>
+        <p
+          class="timer-block__whisper is-hidden"
+          id="timer-whisper"
+          aria-live="polite"
+        ></p>
+        <!-- Gizli katman: beklenmedik tıklama -->
+        <button type="button" class="whisper-hit" id="whisper-hit" tabindex="-1" aria-hidden="true"></button>
+      </aside>
+
+      <!-- SECTION 1 — curiosity -->
+      <section class="panel" data-section="1">
+        <div class="panel__content">
+          <div class="panel__text reveal">
+            <div class="panel__text-inner parallax-text">
+              <p class="panel__line" id="panel-1-a"></p>
+              <p class="panel__line panel__line--stagger" id="panel-1-b"></p>
+            </div>
+          </div>
+          <div class="panel__visual">
+            <img
+              class="panel__img parallax-img"
+              src="assets/panel-1.jpg"
+              alt=""
+              loading="lazy"
+              data-fallback="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=1200&q=80"
+            />
+          </div>
+        </div>
+      </section>
+
+      <div class="story-continue" id="story-continue">
+        <button type="button" id="story-continue-btn" class="story-continue__btn">
+          Devam etmek ister misin?
+        </button>
+      </div>
+
+      <div id="story-rest" class="story-rest is-hidden" aria-hidden="true">
+      <div class="flow-bridge" id="flow-bridge-1" aria-live="polite">
+        <p class="flow-bridge__hint" id="flow-bridge-1-hint"></p>
+        <div
+          class="flow-choice"
+          role="group"
+          aria-label="Okuma temposu"
+        >
+          <button type="button" class="flow-choice__btn" data-flow="slow">
+            Yavaşça
+          </button>
+          <button type="button" class="flow-choice__btn" data-flow="fast">
+            Durmadan
+          </button>
+        </div>
+      </div>
+
+      <div
+        id="story-gated"
+        class="story-gated is-hidden"
+        aria-hidden="true"
+      >
+      <!-- SECTION 2 — first memory + hover reveal -->
+      <section class="panel" data-section="2">
+        <div class="panel__content">
+          <div class="panel__text reveal">
+            <div class="panel__text-inner parallax-text">
+              <p class="panel__line" id="panel-2-a"></p>
+              <p class="panel__line panel__line--faint hover-reveal line-after-pause" id="panel-2-b"></p>
+            </div>
+          </div>
+          <div class="panel__visual">
+            <img
+              class="panel__img parallax-img"
+              src="assets/panel-2.jpg"
+              alt=""
+              loading="lazy"
+              data-fallback="https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=1200&q=80"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3 — unnoticed detail -->
+      <section class="panel" data-section="3">
+        <div class="panel__content">
+          <div class="panel__text reveal">
+            <div class="panel__text-inner parallax-text">
+              <p class="panel__line" id="panel-3-a"></p>
+              <p class="panel__line line-after-pause" id="panel-3-b"></p>
+            </div>
+          </div>
+          <div class="panel__visual">
+            <img
+              class="panel__img parallax-img"
+              src="assets/panel-3.jpg"
+              alt=""
+              loading="lazy"
+              data-fallback="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Doğum günü — ortada sessizçe açılan -->
+      <section class="panel panel--birthday-reveal" data-section="birthday-reveal" id="birthday-reveal-section">
+        <div class="panel__content panel__content--narrow">
+          <div class="panel__text reveal" id="birthday-reveal-block">
+            <div class="panel__text-inner parallax-text">
+              <p class="panel__line" id="birthday-reveal-a"></p>
+              <p
+                class="panel__line line-after-pause birthday-reveal__line"
+                id="birthday-reveal-b"
+                data-line-delay="2200"
+              ></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7) USER INTERACTION -->
+      <section class="panel panel--interaction" data-section="interaction">
+        <div class="panel__content">
+          <div class="interaction-block reveal" id="interaction-block">
+            <label class="interaction-block__label" for="user-whisper"
+              >Buraya bir şey yaz…</label
+            >
+            <textarea
+              id="user-whisper"
+              class="interaction-block__input"
+              rows="3"
+              maxlength="400"
+              placeholder="İstediğin kadar kısa veya uzun."
+            ></textarea>
+            <button type="button" class="interaction-block__send" id="user-whisper-send">
+              Bırak burada
+            </button>
+            <div class="interaction-block__response is-hidden" id="user-whisper-response"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4 — emotional realization -->
+      <section class="panel" data-section="4">
+        <div class="panel__content">
+          <div class="panel__text reveal">
+            <div class="panel__text-inner parallax-text">
+              <p class="panel__line" id="panel-4-a"></p>
+              <p class="panel__line line-after-pause" id="panel-4-b"></p>
+            </div>
+          </div>
+          <div class="panel__visual">
+            <img
+              class="panel__img parallax-img"
+              src="assets/panel-4.jpg"
+              alt=""
+              loading="lazy"
+              data-fallback="https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?w=1200&q=80"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5 — vulnerability + delayed line -->
+      <section class="panel" data-section="5">
+        <div class="panel__content">
+          <div class="panel__text reveal">
+            <div class="panel__text-inner parallax-text">
+              <p class="panel__line" id="panel-5-a"></p>
+              <p class="panel__line line-after-pause" id="panel-5-b"></p>
+              <p class="panel__line panel__line--delayed" id="panel-5-delayed" aria-live="polite"></p>
+            </div>
+          </div>
+          <div class="panel__visual">
+            <img
+              class="panel__img parallax-img"
+              src="assets/panel-5.jpg"
+              alt=""
+              loading="lazy"
+              data-fallback="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 6 — present moment -->
+      <section class="panel" data-section="6">
+        <div class="panel__content">
+          <div class="panel__text reveal">
+            <div class="panel__text-inner parallax-text">
+              <p class="panel__line" id="panel-6-a"></p>
+              <p class="panel__line line-after-pause" id="panel-6-b"></p>
+            </div>
+          </div>
+          <div class="panel__visual">
+            <img
+              class="panel__img parallax-img"
+              src="assets/panel-6.jpg"
+              alt=""
+              loading="lazy"
+              data-fallback="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=1200&q=80"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- 8) BIRTHDAY — sadece tarih eşleşince (JS) -->
+      <section class="panel panel--birthday is-hidden" id="birthday-panel" data-section="birthday">
+        <div class="panel__content">
+          <div class="panel__text reveal">
+            <div class="panel__text-inner parallax-text">
+              <p class="panel__line panel__line--accent" id="birthday-line-a"></p>
+              <p class="panel__line line-after-pause" id="birthday-line-b"></p>
+            </div>
+          </div>
+          <div class="panel__visual">
+            <img
+              class="panel__img parallax-img"
+              src="assets/panel-birthday.jpg"
+              alt=""
+              loading="lazy"
+              data-fallback="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1200&q=80"
+            />
+          </div>
+        </div>
+      </section>
+
+      <div class="flow-bridge flow-bridge--tight" id="flow-bridge-2" aria-live="polite">
+        <p class="flow-bridge__hint" id="flow-bridge-2-hint"></p>
+        <div
+          class="flow-choice"
+          role="group"
+          aria-label="Devam"
+        >
+          <button type="button" class="flow-choice__btn" data-flow2="ready">
+            Hazırım
+          </button>
+          <button type="button" class="flow-choice__btn" data-flow2="pause">
+            Biraz daha
+          </button>
+        </div>
+      </div>
+
+      <div
+        id="story-tail"
+        class="story-tail is-hidden"
+        aria-hidden="true"
+      >
+      <!-- 10) Pre-final build-up -->
+      <div class="pre-final reveal" id="pre-final">
+        <p class="pre-final__line" id="pre-final-a"></p>
+        <p
+          class="pre-final__line pre-final__line--soft line-after-pause"
+          id="pre-final-b"
+          data-line-delay="1200"
+        ></p>
+        <p
+          class="pre-final__line pre-final__line--return is-hidden line-after-pause"
+          id="pre-final-return"
+          data-line-delay="2400"
+        ></p>
+      </div>
+
+      <div class="gift-moment reveal" id="gift-moment">
+        <button type="button" id="gift-btn" class="gift-moment__btn">
+          Senin için bir şey var
+        </button>
+      </div>
+
+      <div class="story__end">
+        <button type="button" id="final-btn" class="final-cta is-hidden">Son bir şey var</button>
+      </div>
+      </div>
+
+      </div>
+      </div>
+
+      <button type="button" id="hidden-trigger" class="hidden-dot" aria-label=" ">
+        <span class="hidden-dot__mark" aria-hidden="true"></span>
+      </button>
+    </main>
+
+    <div id="floating-toast" class="toast is-hidden" role="status" aria-live="polite"></div>
+
+    <div id="final-overlay" class="overlay is-hidden" aria-hidden="true">
+      <div class="overlay__inner">
+        <div class="overlay__body" id="final-lines"></div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
